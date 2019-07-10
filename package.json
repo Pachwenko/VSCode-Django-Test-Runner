@@ -1,0 +1,126 @@
+{
+    "name": "django-test-runner",
+    "displayName": "Django Test Runner",
+    "description": "Run Django and Django-nose tests in VSCode",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.36.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "keywords": [
+        "python",
+        "python tests",
+        "django",
+        "django tests",
+        "tests"
+    ],
+    "activationEvents": [
+        "onCommand:extension.djangoTestRunner.runMethodTests",
+        "onCommand:extension.djangoTestRunner.runClassTests",
+        "onCommand:extension.djangoTestRunner.runFileTests",
+        "onCommand:extension.djangoTestRunner.runAppTests",
+        "onCommand:extension.djangoTestRunner.runPreviousTests"
+    ],
+    "main": "./out/extension",
+    "contributes": {
+        "configuration": [
+            {
+                "title": "Test prefix",
+                "properties": {
+                    "python.djangoTestRunner.prefixCommand": {
+                        "type": "string",
+                        "default": "",
+                        "description": "Prefix command to be executed before all others",
+                        "scope": "resource"
+                    }
+                }
+            },
+            {
+                "title": "Test Flags",
+                "properties": {
+                    "python.djangoTestRunner.flags": {
+                        "type": "string",
+                        "default": "",
+                        "description": "Extra flags to add, also useful for running modified manage.py files",
+                        "scope": "resource"
+                    }
+                }
+            },
+            {
+                "title": "Test with Django-Nose",
+                "properties": {
+                    "python.djangoTestRunner.djangoNose": {
+                        "type": "boolean",
+                        "default": "",
+                        "description": "Whether or not to use a colon to denote class/method inside a file. Required for testing with Django-Nose",
+                        "scope": "resource"
+                    }
+                }
+            }
+        ],
+        "commands": [
+            {
+                "command": "extension.djangoTestRunner.runPreviousTests",
+                "title": "djangoTestRunner: Run Previous Tests"
+            },
+            {
+                "command": "extension.djangoTestRunner.runMethodTests",
+                "title": "djangoTestRunner: Run Closest Method Test"
+            },
+            {
+                "command": "extension.djangoTestRunner.runClassTests",
+                "title": "djangoTestRunner: Run Closest Class Tests"
+            },
+            {
+                "command": "extension.djangoTestRunner.runFileTests",
+                "title": "djangoTestRunner: Run Current File tests"
+            },
+            {
+                "command": "extension.djangoTestRunner.runAppTests",
+                "title": "djangoTestRunner: Run Current App Tests"
+            }
+        ],
+        "keybindings": [
+            {
+                "command": "extension.djangoTestRunner.runMethodTests",
+                "key": "cmd+d cmd+m"
+            },
+            {
+                "command": "extension.djangoTestRunner.runClassTests",
+                "key": "cmd+d cmd+c"
+            },
+            {
+                "command": "extension.djangoTestRunner.runFileTests",
+                "key": "cmd+d cmd+f"
+            },
+            {
+                "command": "extension.djangoTestRunner.runAppTests",
+                "key": "cmd+d cmd+a"
+            },
+            {
+                "command": "extension.djangoTestRunner.runPreviousTests",
+                "key": "cmd+d cmd+p"
+            }
+        ]
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run compile",
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./",
+        "pretest": "npm run compile",
+        "test": "node ./out/test/runTest.js"
+    },
+    "devDependencies": {
+        "@types/glob": "^7.1.1",
+        "@types/mocha": "^5.2.6",
+        "@types/node": "^10.12.21",
+        "@types/vscode": "^1.36.0",
+        "glob": "^7.1.4",
+        "mocha": "^6.1.4",
+        "typescript": "^3.3.1",
+        "tslint": "^5.12.1",
+        "vscode-test": "^1.0.0-next.0"
+    }
+}
