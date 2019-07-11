@@ -3,6 +3,8 @@
 Adds support for running Django tests in [Visual Studio Code](https://github.com/microsoft/vscode). Provides shortcuts to run closest method, class, file, app and previous tests. Provides support for Django-Nose in settings.
 Draws inspiration from [vscode-django-tests](https://github.com/remik/vscode-django-tests) and [vim-python-test-runner](https://github.com/JarrodCTaylor/vim-python-test-runner).
 
+## Features
+
 Default shortcuts:
 ```
 Run Closest Test Method: cmd+d+m        extension.djangoTestRunner.runMethodTests
@@ -11,12 +13,6 @@ Run Current Test File:   cmd+d+f        extension.djangoTestRunner.runFileTests
 Run Current App Tests:   cmd+d+a        extension.djangoTestRunner.runAppTests
 Run Previous Tests:      cmd+d+p        extension.djangoTestRunner.runPreviousTests
 ```
-
-## Features
-
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
 
 ## Requirements
 
