@@ -115,11 +115,8 @@ class TestRunner {
   isDjangoNose(): boolean {
     const editor = vscode.window.activeTextEditor;
     if (!editor) { return false; }
-    const config = vscode.workspace.getConfiguration("python.djangoTestRunner.djangoNose");
-    if (config) {
-      return true;
-    }
-    return false;
+    const config = vscode.workspace.getConfiguration("", editor.document.uri);
+    return config.get("python.djangoTestRunner.djangoNose") === true;
   }
 
   runTests(testPath: string): void {
@@ -134,6 +131,7 @@ class TestRunner {
         terminal = vscode.window.createTerminal("djangoTestRunner");
       }
       terminal.show();
+      terminal.sendText("source " + configuration.get("python.pythonPath"));
       const cmds = [
         configuration.get("python.djangoTestRunner.prefixCommand"),
         configuration.get("python.pythonPath"),
