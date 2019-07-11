@@ -1,4 +1,4 @@
-# django-test-runner
+# [django-test-runner](https://marketplace.visualstudio.com/items?itemName=Pachwenko.django-test-runner)
 
 Adds support for running Django tests in [Visual Studio Code](https://github.com/microsoft/vscode). Provides shortcuts to run closest method, class, file, app and previous tests. Provides support for Django-Nose in settings.
 Draws inspiration from [vscode-django-tests](https://github.com/remik/vscode-django-tests) and [vim-python-test-runner](https://github.com/JarrodCTaylor/vim-python-test-runner).
