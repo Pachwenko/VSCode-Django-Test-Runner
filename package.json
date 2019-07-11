@@ -4,6 +4,7 @@
     "description": "Run Django and Django-nose tests in VSCode",
     "version": "1.0.0",
     "publisher": "Pachwenko",
+    "repository": "https://github.com/Pachwenko/VSCode-Django-Test-Runner",
     "engines": {
         "vscode": "^1.36.0"
     },

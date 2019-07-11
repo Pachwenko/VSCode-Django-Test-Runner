@@ -56,9 +56,9 @@ class TestRunner {
     this.filePath = currentDocument.fileName
       .replace(currentWorkspacePath.uri.fsPath, "")
       .replace(".py", "")
-      .replace("/", ".")
-      .replace("\\", ".")
-      .replace("\\\\", ".")
+      .replace(/\//g, ".")
+      .replace(/\\/g, ".")
+      .replace(/\\\\/g, ".")
       .substring(1);
   }
 
