@@ -131,7 +131,6 @@ class TestRunner {
         terminal = vscode.window.createTerminal("djangoTestRunner");
       }
       terminal.show();
-      terminal.sendText("source " + configuration.get("python.pythonPath"));
       const cmds = [
         configuration.get("python.djangoTestRunner.prefixCommand"),
         configuration.get("python.pythonPath"),
