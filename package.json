@@ -2,7 +2,7 @@
     "name": "django-test-runner",
     "displayName": "Django Test Runner",
     "description": "Run Django and Django-nose tests in VSCode",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "publisher": "Pachwenko",
     "repository": "https://github.com/Pachwenko/VSCode-Django-Test-Runner",
     "engines": {
