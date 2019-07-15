@@ -4,13 +4,13 @@ All notable changes to the "django-test-runner" extension will be documented in 
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [3.0.2] - 2019-07-15
+## [3.0.3] - 2019-07-15
 
 ### Changed
 
 - Redid the changes from 2.0.0
 - If you have any old settings they will need renamed to the new commands
-- Tried to revert to version 2.0 or ealier but that is unsupported. All new updated will be 3.0.2 or greater
+- Tried to revert to version 2.0 or ealier but that is unsupported. All new updated will be 3.0.3 or greater
 
 ## [3.0.1] - 2019-07-15
 
