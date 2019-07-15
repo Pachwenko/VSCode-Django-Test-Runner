@@ -177,30 +177,30 @@ let tester: TestRunner = new TestRunner();
 export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      "python.djangoTestRunner.runPreviousTests",
+      "extension.djangoTestRunner.runPreviousTests",
       () => {
         tester.runPreviousTests();
       }
     ),
     vscode.commands.registerCommand(
-      "python.djangoTestRunner.runMethodTests",
+      "extension.djangoTestRunner.runMethodTests",
       () => {
         tester.runMethodTests();
       }
     ),
     vscode.commands.registerCommand(
-      "python.djangoTestRunner.runClassTests",
+      "extension.djangoTestRunner.runClassTests",
       () => {
         tester.runClassTests();
       }
     ),
     vscode.commands.registerCommand(
-      "python.djangoTestRunner.runFileTests",
+      "extension.djangoTestRunner.runFileTests",
       () => {
         tester.runFileTests();
       }
     ),
-    vscode.commands.registerCommand("python.djangoTestRunner.runAppTests", () => {
+    vscode.commands.registerCommand("extension.djangoTestRunner.runAppTests", () => {
       tester.runAppTests();
     })
   );

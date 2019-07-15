@@ -19,13 +19,13 @@
         "tests"
     ],
     "activationEvents": [
-        "onCommand:python.djangoTestRunner.runMethodTests",
-        "onCommand:python.djangoTestRunner.runClassTests",
-        "onCommand:python.djangoTestRunner.runFileTests",
-        "onCommand:python.djangoTestRunner.runAppTests",
-        "onCommand:python.djangoTestRunner.runPreviousTests"
+        "onCommand:extension.djangoTestRunner.runMethodTests",
+        "onCommand:extension.djangoTestRunner.runClassTests",
+        "onCommand:extension.djangoTestRunner.runFileTests",
+        "onCommand:extension.djangoTestRunner.runAppTests",
+        "onCommand:extension.djangoTestRunner.runPreviousTests"
     ],
-    "main": "./out/python",
+    "main": "./out/extension",
     "contributes": {
         "configuration": [
             {
@@ -64,45 +64,45 @@
         ],
         "commands": [
             {
-                "command": "python.djangoTestRunner.runPreviousTests",
+                "command": "extension.djangoTestRunner.runPreviousTests",
                 "title": "djangoTestRunner: Run Previous Tests"
             },
             {
-                "command": "python.djangoTestRunner.runMethodTests",
+                "command": "extension.djangoTestRunner.runMethodTests",
                 "title": "djangoTestRunner: Run Closest Method Test"
             },
             {
-                "command": "python.djangoTestRunner.runClassTests",
+                "command": "extension.djangoTestRunner.runClassTests",
                 "title": "djangoTestRunner: Run Closest Class Tests"
             },
             {
-                "command": "python.djangoTestRunner.runFileTests",
+                "command": "extension.djangoTestRunner.runFileTests",
                 "title": "djangoTestRunner: Run Current File tests"
             },
             {
-                "command": "python.djangoTestRunner.runAppTests",
+                "command": "extension.djangoTestRunner.runAppTests",
                 "title": "djangoTestRunner: Run Current App Tests"
             }
         ],
         "keybindings": [
             {
-                "command": "python.djangoTestRunner.runMethodTests",
+                "command": "extension.djangoTestRunner.runMethodTests",
                 "key": "cmd+d cmd+m"
             },
             {
-                "command": "python.djangoTestRunner.runClassTests",
+                "command": "extension.djangoTestRunner.runClassTests",
                 "key": "cmd+d cmd+c"
             },
             {
-                "command": "python.djangoTestRunner.runFileTests",
+                "command": "extension.djangoTestRunner.runFileTests",
                 "key": "cmd+d cmd+f"
             },
             {
-                "command": "python.djangoTestRunner.runAppTests",
+                "command": "extension.djangoTestRunner.runAppTests",
                 "key": "cmd+d cmd+a"
             },
             {
-                "command": "python.djangoTestRunner.runPreviousTests",
+                "command": "extension.djangoTestRunner.runPreviousTests",
                 "key": "cmd+d cmd+p"
             }
         ]

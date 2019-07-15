@@ -7,11 +7,11 @@ Draws inspiration from [vscode-django-tests](https://github.com/remik/vscode-dja
 
 Default shortcuts:
 ```
-Run Closest Test Method: cmd+d+m
-Run Closest Test Class:  cmd+d+c
-Run Current Test File:   cmd+d+f
-Run Current App Tests:   cmd+d+a
-Run Previous Tests:      cmd+d+p
+Run Closest Test Method: cmd+d+m        extension.djangoTestRunner.runMethodTests
+Run Closest Test Class:  cmd+d+c        extension.djangoTestRunner.runClassTests
+Run Current Test File:   cmd+d+f        extension.djangoTestRunner.runFileTests
+Run Current App Tests:   cmd+d+a        extension.djangoTestRunner.runAppTests
+Run Previous Tests:      cmd+d+p        extension.djangoTestRunner.runPreviousTests
 ```
 
 ## Requirements
