@@ -28,6 +28,8 @@ This extension contributes the following settings:
 
 ## Known Issues
 
+- Default shortcuts may or may not work and require setting them manually
+
 Open a issue/feature request and more at [the github repository](https://github.com/Pachwenko/VSCode-Django-Test-Runner/issues)
 
 ## Release Notes

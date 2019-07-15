@@ -4,6 +4,13 @@ All notable changes to the "django-test-runner" extension will be documented in 
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.0.1] - 2019-07-15
+
+### Fixed
+
+- Reverted to older version, refactoring command names seems to have broken the extension
+- Also version 3 now because it seems versions cant be reverted to a older one?
+
 ## [1.0.4] - 2019-07-11
 
 ### Fixed
