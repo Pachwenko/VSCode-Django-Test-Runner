@@ -4,6 +4,12 @@ All notable changes to the "django-test-runner" extension will be documented in 
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.0.4] - 2019-07-16
+
+### Added
+
+- Updated README with vscode vim settings to emulate vim-python-runner keybindings
+
 ## [3.0.3] - 2019-07-15
 
 ### Changed
