@@ -40,6 +40,17 @@
                 }
             },
             {
+                "title": "Manage program",
+                "properties": {
+                    "python.djangoTestRunner.manageProgram": {
+                        "type": "string",
+                        "default": "./manage.py",
+                        "description": "The path to the manage.py script",
+                        "scope": "resource"
+                    }
+                }
+            },
+            {
                 "title": "Test Flags",
                 "properties": {
                     "python.djangoTestRunner.flags": {
