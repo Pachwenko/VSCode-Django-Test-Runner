@@ -4,6 +4,12 @@ All notable changes to the "django-test-runner" extension will be documented in 
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.1.0] - 2020-05-13
+
+### Added
+
+- Add test-running commands to the editor's context menu
+
 ## [3.0.4] - 2019-07-16
 
 ### Added

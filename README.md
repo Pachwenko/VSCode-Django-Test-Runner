@@ -5,7 +5,7 @@ Draws inspiration from [vscode-django-tests](https://github.com/remik/vscode-dja
 
 ## Features
 
-Default shortcuts:
+### Default shortcuts:
 
 ```
 Run Closest Test Method: cmd+d+m        extension.djangoTestRunner.runMethodTests
@@ -42,6 +42,14 @@ VSCodevim keybindings (put these in your settings.json file):
 ],
 ```
 
+### Context menu
+
+By default, this extension adds the following items to the editor's context menu:
+
+ - Run Closest Test Method
+ - Run Closest Test Class
+ - Run Current Test File
+
 ## Requirements
 
 Requires manage&#46;py to be in the root workspace directory, otherwise add a cd command to the `python.djangoTestRunner.prefixCommand` settings such as "cd ~/Projects/hello-world/src &&"
@@ -53,6 +61,7 @@ This extension contributes the following settings:
 - `python.djangoTestRunner.djangoNose`: if checked will use django-nose syntax for running class/method tests inside a file, defaults to non-nose testing syntax
 - `python.djangoTestRunner.flags`: any flags you wish to run such as --nocapture, also useful for specifying different settings if you use a modified manage&#46;py
 - `python.djangoTestRunner.prefixCommand`: any command(s) to be directly before the main test command e.g. "cd ~/Projects/hello-world/src &&" to cd into the directory containing your manage&#46;py
+- `python.djangoTestRunner.showCommandsInContextMenu`: if checked will add commands to the editor's context menu
 
 ## Known Issues
 
