@@ -60,27 +60,27 @@ class TestRunner {
       .replace(/\\/g, ".")
       .replace(/\\\\/g, ".")
       .substring(1);
-    this.filePath = this.stripRootModuleIfSpecificied(this.filePath);
+
+      this.stripRootPackageIfSpecified();
   }
 
-  stripRootModuleIfSpecificied(testPath: string): string {
+  stripRootPackageIfSpecified() {
     const editor = vscode.window.activeTextEditor;
-    if (!editor) { return testPath; }
+    if (!editor) { return this.filePath; }
     const config = vscode.workspace.getConfiguration("", editor.document.uri);
-    let rootModule: string = config.get("python.djangoTestRunner.rootModuleToRemoveFromPath") || '';
-    
-    if (!rootModule) { return testPath; }
 
-    if (!rootModule.endsWith('.')) { rootModule += '.'; }
-    
-    let idxOfRootModuleSubstrStart = testPath.indexOf(rootModule);
+    let rootPackage: string = config.get("python.djangoTestRunner.rootPackageName") || '';
+    if (!rootPackage) { return this.filePath; }
 
-    if (idxOfRootModuleSubstrStart < 0) {
-      return testPath;
-    } else {
-      let idxOfRootModuleSubstrEnd = idxOfRootModuleSubstrStart + rootModule.length;
-      return testPath.substring(idxOfRootModuleSubstrEnd);
-    }
+    // ensure that rootpath ends with a period as the period need to be stripped as well
+    if (!rootPackage.endsWith('.')) { rootPackage += '.'; }
+
+    let idxOfRootModuleSubstrStart = this.filePath.indexOf(rootPackage);
+    if (idxOfRootModuleSubstrStart < 0) { return this.filePath; }
+
+    // assign this.filepath = everything after the end of rootModule
+    let idxOfRootModuleSubstrEnd = idxOfRootModuleSubstrStart + rootPackage.length;
+    this.filePath = this.filePath.substring(idxOfRootModuleSubstrEnd);
   }
 
   updateClassAndMethodPath(): void {
