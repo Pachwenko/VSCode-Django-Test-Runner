@@ -60,6 +60,27 @@ class TestRunner {
       .replace(/\\/g, ".")
       .replace(/\\\\/g, ".")
       .substring(1);
+    this.filePath = this.stripRootModuleIfSpecificied(this.filePath);
+  }
+
+  stripRootModuleIfSpecificied(testPath: string): string {
+    const editor = vscode.window.activeTextEditor;
+    if (!editor) { return testPath; }
+    const config = vscode.workspace.getConfiguration("", editor.document.uri);
+    let rootModule: string = config.get("python.djangoTestRunner.rootModuleToRemoveFromPath") || '';
+    
+    if (!rootModule) { return testPath; }
+
+    if (!rootModule.endsWith('.')) { rootModule += '.'; }
+    
+    let idxOfRootModuleSubstrStart = testPath.indexOf(rootModule);
+
+    if (idxOfRootModuleSubstrStart < 0) {
+      return testPath;
+    } else {
+      let idxOfRootModuleSubstrEnd = idxOfRootModuleSubstrStart + rootModule.length;
+      return testPath.substring(idxOfRootModuleSubstrEnd);
+    }
   }
 
   updateClassAndMethodPath(): void {
