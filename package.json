@@ -60,6 +60,17 @@
                         "scope": "resource"
                     }
                 }
+            },
+            {
+                "title": "Root Django Project Package Name",
+                "properties": {
+                    "python.djangoTestRunner.rootPackageName": {
+                        "type": "string",
+                        "default": "",
+                        "description": "The root of your django project, where manage.py is located. This is used to strip the root package from test paths.",
+                        "scope": "resource"
+                    }
+                }
             }
         ],
         "commands": [
