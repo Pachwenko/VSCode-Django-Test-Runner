@@ -2,7 +2,7 @@
     "name": "django-test-runner",
     "displayName": "Django Test Runner",
     "description": "Run Django and Django-nose tests in VSCode",
-    "version": "3.0.2",
+    "version": "3.1.0",
     "publisher": "Pachwenko",
     "repository": "https://github.com/Pachwenko/VSCode-Django-Test-Runner",
     "engines": {
@@ -60,6 +60,16 @@
                         "scope": "resource"
                     }
                 }
+            },
+            {
+                "title": "Context menu items",
+                "properties": {
+                    "python.djangoTestRunner.showCommandsInContextMenu": {
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Whether or not to show commands in editor's context menu"
+                    }
+                }
             }
         ],
         "commands": [
@@ -84,6 +94,25 @@
                 "title": "python.djangoTestRunner: Run Current App Tests"
             }
         ],
+        "menus": {
+            "editor/context": [
+                {
+                    "command": "python.djangoTestRunner.runMethodTests",
+                    "group": "Django Test Runner",
+                    "when": "config.python.djangoTestRunner.showCommandsInContextMenu"
+                },
+                {
+                    "command": "python.djangoTestRunner.runClassTests",
+                    "group": "Django Test Runner@1",
+                    "when": "config.python.djangoTestRunner.showCommandsInContextMenu"
+                },
+                {
+                    "command": "python.djangoTestRunner.runFileTests",
+                    "group": "Django Test Runner@2",
+                    "when": "config.python.djangoTestRunner.showCommandsInContextMenu"
+                }
+            ]
+        },
         "keybindings": [
             {
                 "command": "python.djangoTestRunner.runMethodTests",
