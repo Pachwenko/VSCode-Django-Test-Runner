@@ -60,6 +60,17 @@
                         "scope": "resource"
                     }
                 }
+            },
+            {
+                "title": "Manage file path",
+                "properties": {
+                    "python.djangoTestRunner.manageFilePath": {
+                        "type": "string",
+                        "default": "./manage.py",
+                        "description": "Django manage.py execution file path",
+                        "scope": "resource"
+                    }
+                }
             }
         ],
         "commands": [

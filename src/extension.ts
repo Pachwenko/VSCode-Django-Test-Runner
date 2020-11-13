@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import { WorkspaceConfiguration } from "vscode";
 
 const METHOD_REGEX = /(\s*)def\s+(test_\w+)\s?\(/i;
 const CLASS_REGEX = /(\s*)class\s+(\w+)/i;
@@ -133,8 +134,7 @@ class TestRunner {
       terminal.show();
       const cmds = [
         configuration.get("python.djangoTestRunner.prefixCommand"),
-        configuration.get("python.pythonPath"),
-        "./manage.py",
+        configuration.get("python.djangoTestRunner.manageFilePath"),
         "test",
         configuration.get("python.djangoTestRunner.flags"),
         testPath
