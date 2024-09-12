@@ -155,7 +155,7 @@ class TestRunner {
       const cmds = [
         configuration.get("python.djangoTestRunner.prefixCommand"),
         configuration.get("python.pythonPath"),
-        "./manage.py",
+        configuration.get("python.djangoTestRunner.manageProgram"),
         "test",
         configuration.get("python.djangoTestRunner.flags"),
         testPath

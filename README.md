@@ -56,6 +56,7 @@ This extension contributes the following settings:
 - `python.djangoTestRunner.rootPackageName`: the name of the root package of your application. Can be used in conjunciton with `prefixCommand` to remove the root package name from test file paths.
   - e.g. if `prefixCommand` is set to `"cd ~/Projects/hello-world/src &&"`, your django project structure may raise errors if test paths are specified with `src.apps.app_name.tests`.
   - setting this to `"rootPackageName": "src"` will cause file paths to return in the format `apps.app_name.tests`, which has the root packed (`src`) removed from the test path
+- `python.djangoTestRunner.manageProgram`: the manage&#46;py script to invoke (default=`./manage.py`)
 
 ## Known Issues
 
