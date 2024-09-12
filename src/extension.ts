@@ -2,9 +2,19 @@ import * as vscode from "vscode";
 
 const METHOD_REGEX = /(\s*)def\s+(test_\w+)\s?\(/i;
 const CLASS_REGEX = /(\s*)class\s+(\w+)/i;
+const TERM_NAME = "Django Test Runner"
 
 
 let terminal: vscode.Terminal;
+
+function getTerminal(): vscode.Terminal {
+  for (const term of vscode.window.terminals) {
+    if (term.name === TERM_NAME) {
+      return term;
+    }
+  }
+  return vscode.window.createTerminal(TERM_NAME);
+}
 
 class TestRunner {
   methodName: string = "";
@@ -148,9 +158,7 @@ class TestRunner {
         "",
         editor.document.uri
       );
-      if (!terminal) {
-        terminal = vscode.window.createTerminal("djangoTestRunner");
-      }
+      terminal = getTerminal();
       terminal.show();
       const cmds = [
         configuration.get("python.djangoTestRunner.prefixCommand"),
