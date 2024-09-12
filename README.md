@@ -53,6 +53,9 @@ This extension contributes the following settings:
 - `python.djangoTestRunner.djangoNose`: if checked will use django-nose syntax for running class/method tests inside a file, defaults to non-nose testing syntax
 - `python.djangoTestRunner.flags`: any flags you wish to run such as --nocapture, also useful for specifying different settings if you use a modified manage&#46;py
 - `python.djangoTestRunner.prefixCommand`: any command(s) to be directly before the main test command e.g. "cd ~/Projects/hello-world/src &&" to cd into the directory containing your manage&#46;py
+- `python.djangoTestRunner.rootPackageName`: the name of the root package of your application. Can be used in conjunciton with `prefixCommand` to remove the root package name from test file paths.
+  - e.g. if `prefixCommand` is set to `"cd ~/Projects/hello-world/src &&"`, your django project structure may raise errors if test paths are specified with `src.apps.app_name.tests`.
+  - setting this to `"rootPackageName": "src"` will cause file paths to return in the format `apps.app_name.tests`, which has the root packed (`src`) removed from the test path
 - `python.djangoTestRunner.manageProgram`: the manage&#46;py script to invoke (default=`./manage.py`)
 
 ## Known Issues

@@ -2,7 +2,7 @@
     "name": "django-test-runner",
     "displayName": "Django Test Runner",
     "description": "Run Django and Django-nose tests in VSCode",
-    "version": "3.0.2",
+    "version": "3.1.0",
     "publisher": "Pachwenko",
     "repository": "https://github.com/Pachwenko/VSCode-Django-Test-Runner",
     "engines": {
@@ -68,6 +68,17 @@
                         "type": "boolean",
                         "default": "",
                         "description": "Whether or not to use a colon to denote class/method inside a file. Required for testing with Django-Nose",
+                        "scope": "resource"
+                    }
+                }
+            },
+            {
+                "title": "Root Django Project Package Name",
+                "properties": {
+                    "python.djangoTestRunner.rootPackageName": {
+                        "type": "string",
+                        "default": "",
+                        "description": "The root of your django project, where manage.py is located. This is used to strip the root package from test paths.",
                         "scope": "resource"
                     }
                 }
