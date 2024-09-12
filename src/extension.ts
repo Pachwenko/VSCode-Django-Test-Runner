@@ -78,6 +78,10 @@ class TestRunner {
     const editor = vscode.window.activeTextEditor;
     if (!editor) { return this.filePath; }
     const config = vscode.workspace.getConfiguration("", editor.document.uri);
+    if (config.get("python.djangoTestRunner.stripRootFolder")) {
+      this.filePath = this.filePath.replace(/^[^.]*\./, '');
+      return;
+    }
 
     let rootPackage: string = config.get("python.djangoTestRunner.rootPackageName") || '';
     if (!rootPackage) { return this.filePath; }
@@ -160,14 +164,14 @@ class TestRunner {
       );
       terminal = getTerminal();
       terminal.show();
+      let pythonPath = configuration.get("python.useVSCodePythonPath") ? configuration.get("python.pythonPath") : ''
       const cmds = [
         configuration.get("python.djangoTestRunner.prefixCommand"),
-        configuration.get("python.pythonPath"),
+        pythonPath,
         configuration.get("python.djangoTestRunner.manageProgram"),
-        "test",
         configuration.get("python.djangoTestRunner.flags"),
         testPath
-      ];
+      ].filter((command) => command);
       terminal.sendText(cmds.join(" "));
     }
   }

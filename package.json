@@ -2,7 +2,7 @@
     "name": "django-test-runner",
     "displayName": "Django Test Runner",
     "description": "Run Django and Django-nose tests in VSCode",
-    "version": "3.1.0",
+    "version": "4.0.0",
     "publisher": "Pachwenko",
     "repository": "https://github.com/Pachwenko/VSCode-Django-Test-Runner",
     "engines": {
@@ -29,12 +29,23 @@
     "contributes": {
         "configuration": [
             {
+                "title": "Use VSCode Python Path",
+                "properties": {
+                    "python.djangoTestRunner.useVSCodePythonPath": {
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Whether or not to use the default python path. If false, please specify with manageProgram setting.",
+                        "scope": "resource"
+                    }
+                }
+            },
+            {
                 "title": "Test prefix",
                 "properties": {
                     "python.djangoTestRunner.prefixCommand": {
                         "type": "string",
                         "default": "",
-                        "description": "Prefix command to be executed before all others. You can set the manage.py directory here with `cd /directory/ &&`",
+                        "description": "Prefix to the manageProgram command. You can set the settings file here. Example: DJANGO_SETTINGS_MODULE=project.settings.test",
                         "scope": "resource"
                     }
                 }
@@ -44,8 +55,8 @@
                 "properties": {
                     "python.djangoTestRunner.manageProgram": {
                         "type": "string",
-                        "default": "./manage.py",
-                        "description": "The path to the manage.py script",
+                        "default": "manage.py test",
+                        "description": "The path to your manage.py script. Could be your python path too if not using the default. See README for examples.",
                         "scope": "resource"
                     }
                 }
@@ -62,12 +73,12 @@
                 }
             },
             {
-                "title": "Test with Django-Nose",
+                "title": "Strip Root Folder from test path",
                 "properties": {
-                    "python.djangoTestRunner.djangoNose": {
+                    "python.djangoTestRunner.stripRootFolder": {
                         "type": "boolean",
-                        "default": "",
-                        "description": "Whether or not to use a colon to denote class/method inside a file. Required for testing with Django-Nose",
+                        "default": true,
+                        "description": "You probably want this enabled unless your manage.py file lives somewhere nonstandard",
                         "scope": "resource"
                     }
                 }
@@ -78,7 +89,18 @@
                     "python.djangoTestRunner.rootPackageName": {
                         "type": "string",
                         "default": "",
-                        "description": "The root of your django project, where manage.py is located. This is used to strip the root package from test paths.",
+                        "description": "The root of your django project, where manage.py is located. This is used removed from the test path. stripRootFolder must be disabled for this to work.",
+                        "scope": "resource"
+                    }
+                }
+            },
+            {
+                "title": "Test with Django-Nose",
+                "properties": {
+                    "python.djangoTestRunner.djangoNose": {
+                        "type": "boolean",
+                        "default": "",
+                        "description": "Whether or not to use a colon to denote class/method inside a file. Required for testing with Django-Nose",
                         "scope": "resource"
                     }
                 }
@@ -133,7 +155,7 @@
         "vscode:prepublish": "npm run compile",
         "compile": "tsc -p ./",
         "watch": "tsc -watch -p ./",
-        "pretest": "npm run compile",
+        "package": "vsce package",
         "test": "node ./out/test/runTest.js"
     },
     "devDependencies": {
