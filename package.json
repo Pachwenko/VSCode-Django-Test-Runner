@@ -2,7 +2,7 @@
     "name": "django-test-runner",
     "displayName": "Django Test Runner",
     "description": "Run Django and Django-nose tests in VSCode",
-    "version": "4.0.1",
+    "version": "4.0.2",
     "publisher": "Pachwenko",
     "repository": "https://github.com/Pachwenko/VSCode-Django-Test-Runner",
     "engines": {
@@ -77,8 +77,8 @@
                 "properties": {
                     "python.djangoTestRunner.stripRootFolder": {
                         "type": "boolean",
-                        "default": true,
-                        "description": "You probably want this enabled unless your manage.py file lives somewhere nonstandard",
+                        "default": false,
+                        "description": "Useful to just take out the first folder on your test path. Otherwise use rootPackageName",
                         "scope": "resource"
                     }
                 }

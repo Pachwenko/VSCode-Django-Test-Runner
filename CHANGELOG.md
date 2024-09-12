@@ -1,8 +1,8 @@
 # Change Log
 
-All notable changes to the "django-test-runner" extension will be documented in this file.
+## [4.0.2] - 2024-09-11
 
-The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
+Actually decided stripRootFolder shouldn't be default.
 
 ## [4.0.1] - 2024-09-11
 

@@ -56,8 +56,7 @@ This extension contributes the following settings:
 - `python.djangoTestRunner.flags`: any flags you wish to run such as --nocapture, also useful for specifying different settings if you use a modified manage.py
 - `python.djangoTestRunner.useVSCodePythonPath`: enabled by default. When disabled you can specify your own python path with `manageProgram` (super powerful)
 - `python.djangoTestRunner.djangoNose`: useful for older django projects. if checked will use django-nose syntax for running class/method tests inside a file
-- `python.djangoTestRunner.stripRootFolder`: Removes the root folder you are in from the python path. You probably want this enabled unless your manage.py file lives somewhere nonstandard
-  - If your project starts in a folder called src then your test path will have src/manage.py when this is disabled
+- `python.djangoTestRunner.stripRootFolder`: Removes the root folder you are in from the python path. You probably don't want this enabled unless your manage.py file lives somewhere nonstandard
 -- `python.djangoTestRunner.rootPackageName`: the name of the root package of your application. Can be used in conjunction with `prefixCommand` to remove the root package name from test file paths.
   - stripRootFolder must be disabled for this to work.
   - e.g. if `prefixCommand` is set to `"cd ~/Projects/hello-world/src &&"`, your django project structure may raise errors if test paths are specified with `src.apps.app_name.tests`.
@@ -74,7 +73,7 @@ Includes a multitude of improvements. Thanks to the community!
 - The terminal does not keep opening over and over again! Thanks [@Mariownyou](https://github.com/Mariownyou)
 - You can specify a rootPackageName if your django code lives in any different directory than your manage.py like under "src/project/"! Thanks [@alex-a-pereira](https://github.com/alex-a-pereira)
   - stripRootFolder must be disabled for this to work.
-- stripRootFolder has been added - Thanks to [@alex-a-pereira](https://github.com/alex-a-pereira) for inspiring this change. Most people will need this so it is enabled by default.
+- stripRootFolder has been added - Thanks to [@alex-a-pereira](https://github.com/alex-a-pereira) for inspiring this change
 - You can now disable the default python path! So you can do cool stuff like set your manageProgram to like `docker compose run test` or your own python path like `virtualenv/bin/python src/manage.py`
 - It's now version 4 and I'm not sure why
 - VSCode is adding support for running Django tests natively but you may still find this useful in your workflows.
