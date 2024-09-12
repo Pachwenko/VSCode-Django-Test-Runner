@@ -53,6 +53,7 @@ This extension contributes the following settings:
 - `python.djangoTestRunner.djangoNose`: if checked will use django-nose syntax for running class/method tests inside a file, defaults to non-nose testing syntax
 - `python.djangoTestRunner.flags`: any flags you wish to run such as --nocapture, also useful for specifying different settings if you use a modified manage&#46;py
 - `python.djangoTestRunner.prefixCommand`: any command(s) to be directly before the main test command e.g. "cd ~/Projects/hello-world/src &&" to cd into the directory containing your manage&#46;py
+- `python.djangoTestRunner.manageProgram`: the manage&#46;py script to invoke (default=`./manage.py`)
 
 ## Known Issues
 
