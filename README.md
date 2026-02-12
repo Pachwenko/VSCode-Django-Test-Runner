@@ -18,230 +18,77 @@ Works in VS Code, Cursor, Windsurf, and VSCodium.
 - **Run Previous Tests** — re-runs the last test command
 - **Smart Parsing** — indentation-aware class/method detection that correctly handles nested classes and strings containing "class"
 - **Terminal Reuse** — reuses a single "Django Test Runner" terminal instead of creating new ones
-- **Fully Configurable** — works with any project structure and test runner
-
-## Commands
-
-| Command | Command ID |
-|---------|-----------|
-| Run Closest Method Test | `python.djangoTestRunner.runMethodTests` |
-| Run Closest Class Tests | `python.djangoTestRunner.runClassTests` |
-| Run Current File Tests | `python.djangoTestRunner.runFileTests` |
-| Run Current App Tests | `python.djangoTestRunner.runAppTests` |
-| Run Previous Tests | `python.djangoTestRunner.runPreviousTests` |
 
 All commands are available from the Command Palette (`Cmd+Shift+P` / `Ctrl+Shift+P`).
+
+## How It Works
+
+The extension builds a test command from your settings and sends it to the terminal:
+
+```
+[prefixCommand] [pythonPath] [manageProgram] [testPath] [flags]
+```
+
+For a standard Django project with `manage.py` in the workspace root, no configuration is needed. The default `manageProgram` is `manage.py test`, so running "Run Closest Method Test" produces something like:
+
+```
+python manage.py test myapp.tests.test_models.MyTestCase.test_create
+```
 
 ## Configuration
 
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
-| `python.djangoTestRunner.manageProgram` | string | `"manage.py test"` | The test command to run. Can be any command that accepts a test path. |
-| `python.djangoTestRunner.prefixCommand` | string | `""` | Prefix before the test command (env vars, cd, docker, etc.) |
+| `python.djangoTestRunner.manageProgram` | string | `"manage.py test"` | The test command. Can be any command that accepts a test path. |
+| `python.djangoTestRunner.prefixCommand` | string | `""` | Prefix before the command (env vars, cd, docker, etc.) |
 | `python.djangoTestRunner.flags` | string | `""` | Flags appended after the test path |
 | `python.djangoTestRunner.useVSCodePythonPath` | boolean | `true` | Use the Python interpreter from the Python extension |
 | `python.djangoTestRunner.stripRootFolder` | boolean | `false` | Strip the first folder from the test path |
 | `python.djangoTestRunner.rootPackageName` | string | `""` | Root package name to strip from test paths |
 | `python.djangoTestRunner.djangoNose` | boolean | `false` | Use colon separator for django-nose syntax |
 
-The test command is assembled as:
+## Examples
 
+Since the command is fully configurable, you can adapt it to any setup:
+
+```json
+// pytest
+{ "python.djangoTestRunner.manageProgram": "pytest", "python.djangoTestRunner.useVSCodePythonPath": false }
+
+// Docker Compose
+{ "python.djangoTestRunner.prefixCommand": "docker compose exec web", "python.djangoTestRunner.useVSCodePythonPath": false }
+
+// Poetry
+{ "python.djangoTestRunner.prefixCommand": "poetry run" }
+
+// tox
+{ "python.djangoTestRunner.manageProgram": "tox -- ", "python.djangoTestRunner.useVSCodePythonPath": false }
+
+// manage.py in a subdirectory (e.g., src/)
+{ "python.djangoTestRunner.prefixCommand": "cd src &&", "python.djangoTestRunner.stripRootFolder": true }
 ```
-[prefixCommand] [pythonPath] [manageProgram] [testPath] [flags]
-```
 
-## Setting Up Keybindings
+Set `useVSCodePythonPath` to `false` whenever your test command already includes a Python interpreter or doesn't need one (pytest, tox, docker, etc.).
 
-This extension does not ship with default keybindings to avoid conflicting with VS Code's built-in shortcuts (e.g., `Cmd+D` for multi-cursor selection).
+## Keybindings
 
-To add your own, open your `keybindings.json` (`Cmd+Shift+P` > "Open Keyboard Shortcuts (JSON)") and add:
+No default keybindings are included to avoid conflicts with VS Code built-ins. Add your own in `keybindings.json` (`Cmd+Shift+P` > "Open Keyboard Shortcuts (JSON)"):
 
 ```json
 [
-    {
-        "key": "ctrl+t ctrl+m",
-        "command": "python.djangoTestRunner.runMethodTests"
-    },
-    {
-        "key": "ctrl+t ctrl+c",
-        "command": "python.djangoTestRunner.runClassTests"
-    },
-    {
-        "key": "ctrl+t ctrl+f",
-        "command": "python.djangoTestRunner.runFileTests"
-    },
-    {
-        "key": "ctrl+t ctrl+a",
-        "command": "python.djangoTestRunner.runAppTests"
-    },
-    {
-        "key": "ctrl+t ctrl+p",
-        "command": "python.djangoTestRunner.runPreviousTests"
-    }
+    { "key": "ctrl+t ctrl+m", "command": "python.djangoTestRunner.runMethodTests" },
+    { "key": "ctrl+t ctrl+c", "command": "python.djangoTestRunner.runClassTests" },
+    { "key": "ctrl+t ctrl+f", "command": "python.djangoTestRunner.runFileTests" },
+    { "key": "ctrl+t ctrl+a", "command": "python.djangoTestRunner.runAppTests" },
+    { "key": "ctrl+t ctrl+p", "command": "python.djangoTestRunner.runPreviousTests" }
 ]
-```
-
-### VSCode-Vim Keybindings
-
-Add these to your `settings.json`:
-
-```json
-"vim.normalModeKeyBindingsNonRecursive": [
-    {
-        "before": ["leader", "t", "m"],
-        "commands": ["python.djangoTestRunner.runMethodTests"]
-    },
-    {
-        "before": ["leader", "t", "c"],
-        "commands": ["python.djangoTestRunner.runClassTests"]
-    },
-    {
-        "before": ["leader", "t", "f"],
-        "commands": ["python.djangoTestRunner.runFileTests"]
-    },
-    {
-        "before": ["leader", "t", "a"],
-        "commands": ["python.djangoTestRunner.runAppTests"]
-    },
-    {
-        "before": ["leader", "t", "p"],
-        "commands": ["python.djangoTestRunner.runPreviousTests"]
-    }
-]
-```
-
-## Common Setups
-
-### Django (default)
-
-No configuration needed for a standard Django project with `manage.py` in the workspace root:
-
-```
-myproject/          <-- open this as your workspace
-├── manage.py
-├── myapp/
-│   └── tests/
-│       └── test_models.py
-```
-
-### pytest
-
-```json
-{
-    "python.djangoTestRunner.manageProgram": "pytest",
-    "python.djangoTestRunner.useVSCodePythonPath": false
-}
-```
-
-### python -m unittest
-
-```json
-{
-    "python.djangoTestRunner.manageProgram": "python -m unittest",
-    "python.djangoTestRunner.useVSCodePythonPath": false
-}
-```
-
-### Docker Compose
-
-```json
-{
-    "python.djangoTestRunner.prefixCommand": "docker compose exec web",
-    "python.djangoTestRunner.manageProgram": "python manage.py test",
-    "python.djangoTestRunner.useVSCodePythonPath": false
-}
-```
-
-### Poetry
-
-```json
-{
-    "python.djangoTestRunner.prefixCommand": "poetry run",
-    "python.djangoTestRunner.manageProgram": "python manage.py test",
-    "python.djangoTestRunner.useVSCodePythonPath": false
-}
-```
-
-### Django-Nose
-
-```json
-{
-    "python.djangoTestRunner.djangoNose": true
-}
-```
-
-This changes the test path separator from dots to colons for class/method paths (e.g., `app.tests.test_models:MyTestCase.test_something`).
-
-### manage.py in a subdirectory
-
-If your `manage.py` is in a subdirectory (e.g., `src/`):
-
-```
-myproject/          <-- open this as your workspace
-├── src/
-│   ├── manage.py
-│   └── myapp/
-│       └── tests/
-│           └── test_models.py
-```
-
-**Option 1: Use `stripRootFolder`** (strips the first path segment):
-
-```json
-{
-    "python.djangoTestRunner.prefixCommand": "cd src &&",
-    "python.djangoTestRunner.stripRootFolder": true
-}
-```
-
-**Option 2: Use `rootPackageName`** (strips a specific package name):
-
-```json
-{
-    "python.djangoTestRunner.prefixCommand": "cd src &&",
-    "python.djangoTestRunner.rootPackageName": "src"
-}
-```
-
-### Custom virtualenv path
-
-```json
-{
-    "python.djangoTestRunner.manageProgram": "venv/bin/python manage.py test",
-    "python.djangoTestRunner.useVSCodePythonPath": false
-}
-```
-
-### tox
-
-```json
-{
-    "python.djangoTestRunner.manageProgram": "tox -- ",
-    "python.djangoTestRunner.useVSCodePythonPath": false
-}
 ```
 
 ## Troubleshooting
 
-**Tests run with the wrong path prefix:**
-Use `stripRootFolder` or `rootPackageName` to remove the unwanted prefix from the test path. See the "manage.py in a subdirectory" section above.
+**Wrong test path?** Use `stripRootFolder` or `rootPackageName` to adjust the path prefix. This is common when `manage.py` lives in a subdirectory.
 
-**Terminal keeps getting recreated:**
-The extension reuses an existing terminal named "Django Test Runner". If you rename or close it, a new one will be created on the next test run.
-
-**Python path not detected:**
-Ensure the [Python extension](https://marketplace.visualstudio.com/items?itemName=ms-python.python) is installed and an interpreter is selected. Alternatively, set `useVSCodePythonPath` to `false` and specify your Python path in `manageProgram`.
-
-**Wrong class detected:**
-The parser uses indentation to determine class hierarchy. Ensure your test file follows standard Python indentation. Strings and comments containing the word "class" are correctly ignored.
-
-## Migrating from v4.x
-
-v5.0.0 is a major release with the following breaking changes:
-
-- **Default keybindings removed** — The previous `Cmd+D` chord shortcuts conflicted with VS Code's multi-cursor feature. You'll need to add your own keybindings (see the section above).
-- **Minimum VS Code version raised to 1.95.0** — Required for the modern extension API. All VS Code versions from October 2024 onward are supported.
-- **All configuration keys are unchanged** — Your existing settings will continue to work without any changes.
+**Python path not detected?** Ensure the [Python extension](https://marketplace.visualstudio.com/items?itemName=ms-python.python) is installed and an interpreter is selected, or set `useVSCodePythonPath` to `false`.
 
 ## Contributing
 
