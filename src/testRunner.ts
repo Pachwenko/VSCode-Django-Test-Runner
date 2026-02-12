@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { getOrCreateTerminal } from './terminal.js';
 import { getConfig, getPythonPath } from './config.js';
-import { parseLines, filePathToDottedPath, stripRootPackage } from './parsing.js';
+import { parseLines, filePathToDottedPath, stripRootPackage, buildFullTestPath, buildClassTestPath, buildCommand } from './parsing.js';
 
 export class TestRunner {
     methodName: string = '';
@@ -9,24 +9,14 @@ export class TestRunner {
     filePath: string = '';
     lastRanTestPath: string = '';
 
-    toString(): string {
-        const config = this.getActiveConfig();
-        if (config?.djangoNose) {
-            return this.filePath + ':' + this.className + '.' + this.methodName;
-        }
-        return this.filePath + '.' + this.className + '.' + this.methodName;
-    }
-
     getFullPath(): string {
-        return this.toString();
+        const djangoNose = this.getActiveConfig()?.djangoNose ?? false;
+        return buildFullTestPath(this.filePath, this.className, this.methodName, djangoNose);
     }
 
     getClassPath(): string {
-        const config = this.getActiveConfig();
-        if (config?.djangoNose) {
-            return this.filePath + ':' + this.className;
-        }
-        return this.filePath + '.' + this.className;
+        const djangoNose = this.getActiveConfig()?.djangoNose ?? false;
+        return buildClassTestPath(this.filePath, this.className, djangoNose);
     }
 
     getFilePath(): string {
@@ -99,15 +89,14 @@ export class TestRunner {
         const terminal = getOrCreateTerminal();
         terminal.show();
 
-        const cmds = [
+        const command = buildCommand(
             config.prefixCommand,
             pythonPath,
             config.manageProgram,
             testPath,
             config.flags,
-        ].filter(Boolean);
-
-        terminal.sendText(cmds.join(' '));
+        );
+        terminal.sendText(command);
     }
 
     runPreviousTests(): void {

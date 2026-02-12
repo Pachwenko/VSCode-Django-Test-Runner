@@ -110,3 +110,52 @@ export function stripRootPackage(
 
     return filePath.substring(idx + root.length);
 }
+
+/**
+ * Build the full test path for a specific test method.
+ *
+ * Django standard:  app.tests.test_models.MyTestCase.test_something
+ * Django Nose:      app.tests.test_models:MyTestCase.test_something
+ */
+export function buildFullTestPath(
+    filePath: string,
+    className: string,
+    methodName: string,
+    djangoNose: boolean
+): string {
+    const separator = djangoNose ? ':' : '.';
+    return filePath + separator + className + '.' + methodName;
+}
+
+/**
+ * Build the test path for an entire test class.
+ *
+ * Django standard:  app.tests.test_models.MyTestCase
+ * Django Nose:      app.tests.test_models:MyTestCase
+ */
+export function buildClassTestPath(
+    filePath: string,
+    className: string,
+    djangoNose: boolean
+): string {
+    const separator = djangoNose ? ':' : '.';
+    return filePath + separator + className;
+}
+
+/**
+ * Build the command string that gets sent to the terminal.
+ *
+ * Filters out empty/falsy parts and joins with spaces.
+ * Example: "docker compose exec web python manage.py test app.tests.TestCase --verbosity=2"
+ */
+export function buildCommand(
+    prefixCommand: string,
+    pythonPath: string,
+    manageProgram: string,
+    testPath: string,
+    flags: string
+): string {
+    return [prefixCommand, pythonPath, manageProgram, testPath, flags]
+        .filter(Boolean)
+        .join(' ');
+}
