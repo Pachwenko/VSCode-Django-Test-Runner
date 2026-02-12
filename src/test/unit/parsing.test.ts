@@ -1,17 +1,17 @@
 import * as assert from 'assert';
-import { parseLines, filePathToDottedPath, stripRootPackage } from '../../parsing.js';
+import { parseLines, filePathToDottedPath, stripRootPackage, buildFullTestPath, buildClassTestPath, buildCommand } from '../../parsing.js';
 
+// ---------------------------------------------------------------------------
+// parseLines
+// ---------------------------------------------------------------------------
 describe('parseLines', () => {
     it('should find a basic test method and class', () => {
-        // Lines in file order (top to bottom), then reversed to simulate
-        // walking backwards from cursor
         const lines = [
             'class MyTestCase(TestCase):',
             '    def test_something(self):',
             '        pass',
         ];
         const reversed = [...lines].reverse();
-
         const result = parseLines(reversed);
         assert.strictEqual(result.methodName, 'test_something');
         assert.strictEqual(result.className, 'MyTestCase');
@@ -24,7 +24,6 @@ describe('parseLines', () => {
             '        pass',
             '    def test_second(self):',
         ];
-        // Lines in reverse (cursor at test_second, walking up)
         const reversed = [...lines].reverse();
         const result = parseLines(reversed);
         assert.strictEqual(result.methodName, 'test_second');
@@ -94,7 +93,6 @@ describe('parseLines', () => {
     });
 
     it('should skip non-test def methods', () => {
-        // parseLines specifically looks for test_ prefix
         const lines = [
             'class MyTest(TestCase):',
             '    def helper_method(self):',
@@ -142,7 +140,6 @@ describe('parseLines', () => {
             '    def test_second(self):',
             '        pass',
         ];
-        // Cursor on test_second, walking up
         const reversed = [...lines].reverse();
         const result = parseLines(reversed);
         assert.strictEqual(result.methodName, 'test_second');
@@ -163,8 +160,56 @@ describe('parseLines', () => {
         assert.strictEqual(result.methodName, 'test_something');
         assert.strictEqual(result.className, 'MyTest');
     });
+
+    it('should handle empty input', () => {
+        const result = parseLines([]);
+        assert.strictEqual(result.methodName, '');
+        assert.strictEqual(result.className, '');
+    });
+
+    it('should handle cursor inside a method body (not on def line)', () => {
+        const lines = [
+            'class MyTest(TestCase):',
+            '    def test_something(self):',
+            '        x = 1',
+            '        y = 2',
+            '        self.assertEqual(x, y)',
+        ];
+        const reversed = [...lines].reverse();
+        const result = parseLines(reversed);
+        assert.strictEqual(result.methodName, 'test_something');
+        assert.strictEqual(result.className, 'MyTest');
+    });
+
+    it('should handle class with decorator', () => {
+        const lines = [
+            '@override_settings(DEBUG=True)',
+            'class MyTest(TestCase):',
+            '    def test_something(self):',
+            '        pass',
+        ];
+        const reversed = [...lines].reverse();
+        const result = parseLines(reversed);
+        assert.strictEqual(result.methodName, 'test_something');
+        assert.strictEqual(result.className, 'MyTest');
+    });
+
+    it('should handle class inheriting from multiple bases', () => {
+        const lines = [
+            'class MyTest(TransactionTestCase, MyMixin):',
+            '    def test_something(self):',
+            '        pass',
+        ];
+        const reversed = [...lines].reverse();
+        const result = parseLines(reversed);
+        assert.strictEqual(result.methodName, 'test_something');
+        assert.strictEqual(result.className, 'MyTest');
+    });
 });
 
+// ---------------------------------------------------------------------------
+// filePathToDottedPath
+// ---------------------------------------------------------------------------
 describe('filePathToDottedPath', () => {
     it('should convert a Unix-style path to dotted notation', () => {
         assert.strictEqual(
@@ -193,8 +238,39 @@ describe('filePathToDottedPath', () => {
             'src.apps.users.tests.test_views'
         );
     });
+
+    it('should handle single file at root', () => {
+        assert.strictEqual(
+            filePathToDottedPath('/test_models.py'),
+            'test_models'
+        );
+    });
+
+    it('should handle __init__.py', () => {
+        assert.strictEqual(
+            filePathToDottedPath('/app/tests/__init__.py'),
+            'app.tests.__init__'
+        );
+    });
+
+    it('should handle mixed separators (Windows with forward slashes)', () => {
+        assert.strictEqual(
+            filePathToDottedPath('\\app/tests\\test_models.py'),
+            'app.tests.test_models'
+        );
+    });
+
+    it('should only strip .py from end, not middle of name', () => {
+        assert.strictEqual(
+            filePathToDottedPath('/app/tests/test_pyutils.py'),
+            'app.tests.test_pyutils'
+        );
+    });
 });
 
+// ---------------------------------------------------------------------------
+// stripRootPackage
+// ---------------------------------------------------------------------------
 describe('stripRootPackage', () => {
     it('should strip first folder when stripRootFolder is true', () => {
         assert.strictEqual(
@@ -235,6 +311,132 @@ describe('stripRootPackage', () => {
         assert.strictEqual(
             stripRootPackage('app.tests.test_models', true, 'something'),
             'tests.test_models'
+        );
+    });
+
+    it('should strip multi-level root package name', () => {
+        assert.strictEqual(
+            stripRootPackage('src.backend.app.tests.test_models', false, 'src.backend'),
+            'app.tests.test_models'
+        );
+    });
+});
+
+// ---------------------------------------------------------------------------
+// buildFullTestPath
+// ---------------------------------------------------------------------------
+describe('buildFullTestPath', () => {
+    it('should build a standard Django test path', () => {
+        assert.strictEqual(
+            buildFullTestPath('app.tests.test_models', 'MyTestCase', 'test_create', false),
+            'app.tests.test_models.MyTestCase.test_create'
+        );
+    });
+
+    it('should build a Django Nose test path with colon separator', () => {
+        assert.strictEqual(
+            buildFullTestPath('app.tests.test_models', 'MyTestCase', 'test_create', true),
+            'app.tests.test_models:MyTestCase.test_create'
+        );
+    });
+
+    it('should handle deeply nested module paths', () => {
+        assert.strictEqual(
+            buildFullTestPath('apps.users.tests.test_views', 'UserViewTest', 'test_login', false),
+            'apps.users.tests.test_views.UserViewTest.test_login'
+        );
+    });
+});
+
+// ---------------------------------------------------------------------------
+// buildClassTestPath
+// ---------------------------------------------------------------------------
+describe('buildClassTestPath', () => {
+    it('should build a standard Django class test path', () => {
+        assert.strictEqual(
+            buildClassTestPath('app.tests.test_models', 'MyTestCase', false),
+            'app.tests.test_models.MyTestCase'
+        );
+    });
+
+    it('should build a Django Nose class test path with colon separator', () => {
+        assert.strictEqual(
+            buildClassTestPath('app.tests.test_models', 'MyTestCase', true),
+            'app.tests.test_models:MyTestCase'
+        );
+    });
+});
+
+// ---------------------------------------------------------------------------
+// buildCommand
+// ---------------------------------------------------------------------------
+describe('buildCommand', () => {
+    it('should build a basic Django test command', () => {
+        assert.strictEqual(
+            buildCommand('', '', 'manage.py test', 'app.tests.MyTest.test_it', ''),
+            'manage.py test app.tests.MyTest.test_it'
+        );
+    });
+
+    it('should include prefix command (Docker)', () => {
+        assert.strictEqual(
+            buildCommand('docker compose exec web', '', 'manage.py test', 'app.tests.MyTest', ''),
+            'docker compose exec web manage.py test app.tests.MyTest'
+        );
+    });
+
+    it('should include python path', () => {
+        assert.strictEqual(
+            buildCommand('', '/usr/bin/python3', 'manage.py test', 'app.tests.MyTest', ''),
+            '/usr/bin/python3 manage.py test app.tests.MyTest'
+        );
+    });
+
+    it('should include flags', () => {
+        assert.strictEqual(
+            buildCommand('', '', 'manage.py test', 'app.tests.MyTest', '--verbosity=2 --keepdb'),
+            'manage.py test app.tests.MyTest --verbosity=2 --keepdb'
+        );
+    });
+
+    it('should build a full command with all parts', () => {
+        assert.strictEqual(
+            buildCommand(
+                'docker compose exec web',
+                '/usr/bin/python3',
+                'manage.py test',
+                'app.tests.MyTest.test_it',
+                '--verbosity=2'
+            ),
+            'docker compose exec web /usr/bin/python3 manage.py test app.tests.MyTest.test_it --verbosity=2'
+        );
+    });
+
+    it('should filter out empty strings cleanly', () => {
+        assert.strictEqual(
+            buildCommand('', '', 'pytest', 'tests/test_models.py::TestCase::test_it', ''),
+            'pytest tests/test_models.py::TestCase::test_it'
+        );
+    });
+
+    it('should work with pytest as the runner', () => {
+        assert.strictEqual(
+            buildCommand('', '', 'pytest', 'app.tests.test_models', '-v --tb=short'),
+            'pytest app.tests.test_models -v --tb=short'
+        );
+    });
+
+    it('should work with poetry prefix', () => {
+        assert.strictEqual(
+            buildCommand('poetry run', '', 'python manage.py test', 'app.tests.MyTest', ''),
+            'poetry run python manage.py test app.tests.MyTest'
+        );
+    });
+
+    it('should handle empty test path (run all tests)', () => {
+        assert.strictEqual(
+            buildCommand('', '', 'manage.py test', '', '--keepdb'),
+            'manage.py test --keepdb'
         );
     });
 });
