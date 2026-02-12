@@ -1,6 +1,7 @@
 node_modules/
 out/
+dist/
 .vscode/
 .vscode-test/
-tsconfig.json
-tslintjson
+.claude/
+*.vsix

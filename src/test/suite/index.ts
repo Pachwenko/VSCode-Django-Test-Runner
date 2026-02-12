@@ -1,37 +1,39 @@
 import * as path from 'path';
-import * as Mocha from 'mocha';
-import * as glob from 'glob';
+import * as fs from 'fs';
+import Mocha from 'mocha';
 
 export function run(): Promise<void> {
-	// Create the mocha test
-	const mocha = new Mocha({
-		ui: 'tdd',
-	});
-	mocha.useColors(true);
+    const mocha = new Mocha({
+        ui: 'tdd',
+        color: true,
+    });
 
-	const testsRoot = path.resolve(__dirname, '..');
+    const testsRoot = path.resolve(__dirname, '..');
 
-	return new Promise((c, e) => {
-		glob('**/**.test.js', { cwd: testsRoot }, (err, files) => {
-			if (err) {
-				return e(err);
-			}
+    // Find all .test.js files recursively
+    function findTestFiles(dir: string): string[] {
+        const results: string[] = [];
+        for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+            const fullPath = path.join(dir, entry.name);
+            if (entry.isDirectory()) {
+                results.push(...findTestFiles(fullPath));
+            } else if (entry.name.endsWith('.test.js')) {
+                results.push(fullPath);
+            }
+        }
+        return results;
+    }
 
-			// Add files to the test suite
-			files.forEach(f => mocha.addFile(path.resolve(testsRoot, f)));
+    const testFiles = findTestFiles(testsRoot);
+    testFiles.forEach((f: string) => mocha.addFile(f));
 
-			try {
-				// Run the mocha test
-				mocha.run(failures => {
-					if (failures > 0) {
-						e(new Error(`${failures} tests failed.`));
-					} else {
-						c();
-					}
-				});
-			} catch (err) {
-				e(err);
-			}
-		});
-	});
+    return new Promise<void>((resolve, reject) => {
+        mocha.run((failures: number) => {
+            if (failures > 0) {
+                reject(new Error(`${failures} tests failed.`));
+            } else {
+                resolve();
+            }
+        });
+    });
 }

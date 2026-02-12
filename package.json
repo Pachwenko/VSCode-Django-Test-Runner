@@ -2,13 +2,17 @@
     "name": "django-test-runner",
     "displayName": "Django Test Runner",
     "description": "Run Django and Django-nose tests in VSCode",
-    "version": "4.0.2",
+    "version": "5.0.0",
     "publisher": "Pachwenko",
-    "repository": "https://github.com/Pachwenko/VSCode-Django-Test-Runner",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Pachwenko/VSCode-Django-Test-Runner"
+    },
     "engines": {
-        "vscode": "^1.36.0"
+        "vscode": "^1.95.0"
     },
     "categories": [
+        "Testing",
         "Other"
     ],
     "keywords": [
@@ -18,14 +22,7 @@
         "django tests",
         "tests"
     ],
-    "activationEvents": [
-        "onCommand:python.djangoTestRunner.runMethodTests",
-        "onCommand:python.djangoTestRunner.runClassTests",
-        "onCommand:python.djangoTestRunner.runFileTests",
-        "onCommand:python.djangoTestRunner.runAppTests",
-        "onCommand:python.djangoTestRunner.runPreviousTests"
-    ],
-    "main": "./out/extension",
+    "main": "./dist/extension.js",
     "contributes": {
         "configuration": [
             {
@@ -34,7 +31,7 @@
                     "python.djangoTestRunner.useVSCodePythonPath": {
                         "type": "boolean",
                         "default": true,
-                        "description": "Whether or not to use the default python path. If false, please specify with manageProgram setting.",
+                        "description": "Whether or not to use the default python path from the Python extension. If false, please specify your own python command with the manageProgram setting.",
                         "scope": "resource"
                     }
                 }
@@ -45,18 +42,18 @@
                     "python.djangoTestRunner.prefixCommand": {
                         "type": "string",
                         "default": "",
-                        "description": "Prefix to the manageProgram command. You can set the settings file here. Example: DJANGO_SETTINGS_MODULE=project.settings.test",
+                        "description": "Prefix to the test command. Useful for environment variables, docker compose, poetry run, or cd commands. Example: DJANGO_SETTINGS_MODULE=project.settings.test",
                         "scope": "resource"
                     }
                 }
             },
             {
-                "title": "Manage program",
+                "title": "Test program",
                 "properties": {
                     "python.djangoTestRunner.manageProgram": {
                         "type": "string",
                         "default": "manage.py test",
-                        "description": "The path to your manage.py script. Could be your python path too if not using the default. See README for examples.",
+                        "description": "The test command to run. This can be any command that accepts a test path as an argument. Examples: 'manage.py test', 'pytest', 'python -m unittest'. See README for more examples.",
                         "scope": "resource"
                     }
                 }
@@ -67,7 +64,7 @@
                     "python.djangoTestRunner.flags": {
                         "type": "string",
                         "default": "",
-                        "description": "Extra flags to add, also useful for running modified manage.py files",
+                        "description": "Extra flags appended after the test path. Example: --nocapture --verbosity=2",
                         "scope": "resource"
                     }
                 }
@@ -78,7 +75,7 @@
                     "python.djangoTestRunner.stripRootFolder": {
                         "type": "boolean",
                         "default": false,
-                        "description": "Useful to just take out the first folder on your test path. Otherwise use rootPackageName",
+                        "description": "Strips the first folder from the test path. Useful when manage.py is in a subdirectory. Otherwise use rootPackageName for more control.",
                         "scope": "resource"
                     }
                 }
@@ -89,7 +86,7 @@
                     "python.djangoTestRunner.rootPackageName": {
                         "type": "string",
                         "default": "",
-                        "description": "The root of your django project, where manage.py is located. This is used removed from the test path. stripRootFolder must be disabled for this to work.",
+                        "description": "The root package to strip from the test path. For example, if your project is in 'src/' and manage.py is inside 'src/', set this to 'src'. stripRootFolder must be disabled for this to work.",
                         "scope": "resource"
                     }
                 }
@@ -99,8 +96,8 @@
                 "properties": {
                     "python.djangoTestRunner.djangoNose": {
                         "type": "boolean",
-                        "default": "",
-                        "description": "Whether or not to use a colon to denote class/method inside a file. Required for testing with Django-Nose",
+                        "default": false,
+                        "description": "Whether or not to use a colon to denote class/method inside a file. Required for testing with Django-Nose.",
                         "scope": "resource"
                     }
                 }
@@ -109,64 +106,49 @@
         "commands": [
             {
                 "command": "python.djangoTestRunner.runPreviousTests",
-                "title": "python.djangoTestRunner: Run Previous Tests"
+                "title": "Django Test Runner: Run Previous Tests"
             },
             {
                 "command": "python.djangoTestRunner.runMethodTests",
-                "title": "python.djangoTestRunner: Run Closest Method Test"
+                "title": "Django Test Runner: Run Closest Method Test"
             },
             {
                 "command": "python.djangoTestRunner.runClassTests",
-                "title": "python.djangoTestRunner: Run Closest Class Tests"
+                "title": "Django Test Runner: Run Closest Class Tests"
             },
             {
                 "command": "python.djangoTestRunner.runFileTests",
-                "title": "python.djangoTestRunner: Run Current File tests"
+                "title": "Django Test Runner: Run Current File Tests"
             },
             {
                 "command": "python.djangoTestRunner.runAppTests",
-                "title": "python.djangoTestRunner: Run Current App Tests"
-            }
-        ],
-        "keybindings": [
-            {
-                "command": "python.djangoTestRunner.runMethodTests",
-                "key": "cmd+d cmd+m"
-            },
-            {
-                "command": "python.djangoTestRunner.runClassTests",
-                "key": "cmd+d cmd+c"
-            },
-            {
-                "command": "python.djangoTestRunner.runFileTests",
-                "key": "cmd+d cmd+f"
-            },
-            {
-                "command": "python.djangoTestRunner.runAppTests",
-                "key": "cmd+d cmd+a"
-            },
-            {
-                "command": "python.djangoTestRunner.runPreviousTests",
-                "key": "cmd+d cmd+p"
+                "title": "Django Test Runner: Run Current App Tests"
             }
         ]
     },
     "scripts": {
-        "vscode:prepublish": "npm run compile",
+        "vscode:prepublish": "npm run package",
         "compile": "tsc -p ./",
         "watch": "tsc -watch -p ./",
-        "package": "vsce package",
-        "test": "node ./out/test/runTest.js"
+        "package": "node esbuild.mjs --production",
+        "watch:esbuild": "node esbuild.mjs --watch",
+        "lint": "eslint src/",
+        "test:unit": "TS_NODE_PROJECT=tsconfig.test.json mocha --require ts-node/register 'src/test/unit/**/*.test.ts'",
+        "test:integration": "node ./out/test/integration/runTest.js",
+        "test": "npm run test:unit"
     },
     "devDependencies": {
-        "@types/glob": "^7.1.1",
-        "@types/mocha": "^5.2.6",
-        "@types/node": "^10.12.21",
-        "@types/vscode": "^1.36.0",
-        "glob": "^7.1.4",
-        "mocha": "^6.1.4",
-        "typescript": "^3.3.1",
-        "tslint": "^5.12.1",
-        "vscode-test": "^1.0.0-next.0"
+        "@types/mocha": "^10.0.10",
+        "@types/node": "^20.17.0",
+        "@types/vscode": "^1.95.0",
+        "@typescript-eslint/eslint-plugin": "^8.24.0",
+        "@typescript-eslint/parser": "^8.24.0",
+        "@vscode/test-electron": "^2.4.1",
+        "@vscode/vsce": "^3.7.1",
+        "esbuild": "^0.25.0",
+        "eslint": "^9.20.0",
+        "mocha": "^11.1.0",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.7.3"
     }
 }
