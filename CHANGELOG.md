@@ -1,5 +1,9 @@
 # Change Log
 
+## [5.0.1] - 2025-02-12
+
+- First release to [Open VSX](https://open-vsx.org/) for Cursor, Windsurf, and VSCodium users
+
 ## [5.0.0] - 2025-02-11
 
 ### Breaking Changes
