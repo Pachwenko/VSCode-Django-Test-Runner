@@ -38,8 +38,8 @@ Open VSX also supports secretless trusted publishing through GitHub OIDC. That i
 1. Update `package.json` and `CHANGELOG.md` to the same version.
 2. Run `npm ci`.
 3. Run `npm run lint`, `npx tsc --noEmit`, and `npm run test:unit`.
-4. Run `npm run compile` followed by `npm run test:integration`.
-5. Run `npm run package` and `npx @vscode/vsce package --no-dependencies`.
+4. Run `npm run test:integration` (its pre-test step compiles the tests and builds the extension).
+5. Run `npx @vscode/vsce package --no-dependencies`.
 6. Push the release commit and publish a GitHub Release tagged `v<version>`.
 7. Verify the GitHub Actions publish job and both marketplace listings.
 
