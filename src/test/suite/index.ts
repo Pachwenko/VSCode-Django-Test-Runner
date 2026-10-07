@@ -8,7 +8,8 @@ export function run(): Promise<void> {
         color: true,
     });
 
-    const testsRoot = path.resolve(__dirname, '..');
+    // Keep Extension Host tests isolated from the separately executed unit suite.
+    const testsRoot = __dirname;
 
     // Find all .test.js files recursively
     function findTestFiles(dir: string): string[] {

@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { getOrCreateTerminal } from './terminal.js';
 import { getConfig, getPythonPath } from './config.js';
-import { parseLines, filePathToDottedPath, stripRootPackage, buildFullTestPath, buildClassTestPath, buildCommand } from './parsing.js';
+import { parseLines, filePathToDottedPath, stripRootPackage, getAppPathFromTestPath, buildFullTestPath, buildClassTestPath, buildCommand } from './parsing.js';
 
 export class TestRunner {
     methodName: string = '';
@@ -24,7 +24,7 @@ export class TestRunner {
     }
 
     getAppPath(): string {
-        return '';
+        return getAppPathFromTestPath(this.filePath);
     }
 
     updateFilePath(): void {
@@ -50,6 +50,9 @@ export class TestRunner {
     }
 
     updateClassAndMethodPath(): void {
+        this.methodName = '';
+        this.className = '';
+
         const editor = vscode.window.activeTextEditor;
         if (!editor || editor.document.languageId !== 'python') {
             return;
@@ -109,22 +112,39 @@ export class TestRunner {
 
     runMethodTests(): void {
         this.updatePaths();
+        if (!this.filePath || !this.className || !this.methodName) {
+            vscode.window.showErrorMessage('Place the cursor inside a Django test method before running it.');
+            return;
+        }
         this.runTests(this.getFullPath());
     }
 
     runClassTests(): void {
         this.updatePaths();
+        if (!this.filePath || !this.className) {
+            vscode.window.showErrorMessage('Place the cursor inside a Django test class before running it.');
+            return;
+        }
         this.runTests(this.getClassPath());
     }
 
     runFileTests(): void {
         this.updatePaths();
+        if (!this.filePath) {
+            vscode.window.showErrorMessage('Open a Python test file inside the workspace before running it.');
+            return;
+        }
         this.runTests(this.getFilePath());
     }
 
     runAppTests(): void {
         this.updatePaths();
-        this.runTests(this.getAppPath());
+        const appPath = this.getAppPath();
+        if (!appPath) {
+            vscode.window.showErrorMessage('Could not determine the Django app from this test file.');
+            return;
+        }
+        this.runTests(appPath);
     }
 
     private getActiveConfig(): { djangoNose: boolean } | null {

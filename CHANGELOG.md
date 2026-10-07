@@ -1,5 +1,19 @@
 # Change Log
 
+## Unreleased
+
+### Fixed
+
+- Fixed **Run Current App Tests** so it derives the Django app from conventional `app.tests.*` and nested `apps.name.tests.*` layouts instead of running the entire test suite.
+- Added clear error messages when a method, class, file, or app test path cannot be determined.
+- Repaired the VS Code integration-test command and added integration tests to CI and release verification.
+
+### Documentation and maintenance
+
+- Repositioned the extension around Docker and remote Django workflows where VS Code cannot discover the Python environment.
+- Added Docker Compose examples and corrected the repository license metadata and badges to GPL-3.0.
+- Grouped routine Dependabot updates and documented the Marketplace/Open VSX release-secret setup.
+
 ## [5.0.1] - 2025-02-12
 
 - First release to [Open VSX](https://open-vsx.org/) for Cursor, Windsurf, and VSCodium users

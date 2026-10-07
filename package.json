@@ -1,9 +1,10 @@
 {
     "name": "django-test-runner",
     "displayName": "Django Test Runner",
-    "description": "Run Django and Django-nose tests in VSCode",
+    "description": "Run the nearest Django test in local, Docker, Poetry, tox, and remote terminal workflows",
     "version": "5.0.1",
     "publisher": "Pachwenko",
+    "license": "GPL-3.0-only",
     "repository": {
         "type": "git",
         "url": "https://github.com/Pachwenko/VSCode-Django-Test-Runner"
@@ -134,7 +135,7 @@
         "watch:esbuild": "node esbuild.mjs --watch",
         "lint": "eslint src/",
         "test:unit": "TS_NODE_PROJECT=tsconfig.test.json mocha --require ts-node/register 'src/test/unit/**/*.test.ts'",
-        "test:integration": "node ./out/test/integration/runTest.js",
+        "test:integration": "node ./out/test/runTest.js",
         "test": "npm run test:unit"
     },
     "devDependencies": {
@@ -148,6 +149,7 @@
         "esbuild": "^0.27.3",
         "eslint": "^9.20.0",
         "mocha": "^11.1.0",
+        "ovsx": "^0.10.7",
         "ts-node": "^10.9.2",
         "typescript": "^5.7.3"
     }

@@ -112,6 +112,29 @@ export function stripRootPackage(
 }
 
 /**
+ * Derive the Django app label from a dotted test module path.
+ *
+ * Common layouts:
+ *   myapp.tests.test_models -> myapp
+ *   apps.users.tests.test_models -> apps.users
+ *   myapp.test_models -> myapp
+ */
+export function getAppPathFromTestPath(filePath: string): string {
+    const segments = filePath.split('.').filter(Boolean);
+    const testsIndex = segments.indexOf('tests');
+
+    if (testsIndex > 0) {
+        return segments.slice(0, testsIndex).join('.');
+    }
+
+    if (segments.length > 1) {
+        return segments.slice(0, -1).join('.');
+    }
+
+    return '';
+}
+
+/**
  * Build the full test path for a specific test method.
  *
  * Django standard:  app.tests.test_models.MyTestCase.test_something

@@ -2,6 +2,12 @@ import * as assert from 'assert';
 import * as vscode from 'vscode';
 
 suite('Extension Test Suite', () => {
+    suiteSetup(async () => {
+        const extension = vscode.extensions.getExtension('Pachwenko.django-test-runner');
+        assert.ok(extension, 'Extension should be present');
+        await extension.activate();
+    });
+
     test('Extension should be present', () => {
         assert.ok(vscode.extensions.getExtension('Pachwenko.django-test-runner'));
     });

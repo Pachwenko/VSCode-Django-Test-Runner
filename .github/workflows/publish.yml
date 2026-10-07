@@ -28,14 +28,23 @@ jobs:
       - name: Unit tests
         run: npm run test:unit
 
+      - name: Compile integration tests
+        run: npm run compile
+
+      - name: Integration tests
+        run: xvfb-run -a npm run test:integration
+
       - name: Build extension
         run: npm run package
 
       - name: Publish to VS Marketplace
         if: success()
-        run: npx @vscode/vsce publish --no-dependencies -p "${{ secrets.VSCE_PAT }}"
+        run: npx @vscode/vsce publish --no-dependencies
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
 
       - name: Publish to Open VSX (Cursor, Windsurf, VSCodium)
         if: success()
-        run: npx ovsx publish --no-dependencies -p "${{ secrets.OPEN_VSX_TOKEN }}"
-        continue-on-error: true
+        run: npx ovsx publish --no-dependencies
+        env:
+          OVSX_PAT: ${{ secrets.OPEN_VSX_TOKEN }}
