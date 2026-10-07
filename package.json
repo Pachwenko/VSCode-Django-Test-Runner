@@ -135,6 +135,7 @@
         "watch:esbuild": "node esbuild.mjs --watch",
         "lint": "eslint src/",
         "test:unit": "TS_NODE_PROJECT=tsconfig.test.json mocha --require ts-node/register 'src/test/unit/**/*.test.ts'",
+        "pretest:integration": "npm run compile && npm run package",
         "test:integration": "node ./out/test/runTest.js",
         "test": "npm run test:unit"
     },

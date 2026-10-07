@@ -33,14 +33,8 @@ jobs:
       - name: Unit tests
         run: npm run test:unit
 
-      - name: Compile integration tests
-        run: npm run compile
-
       - name: Integration tests
         run: xvfb-run -a npm run test:integration
-
-      - name: Build extension
-        run: npm run package
 
       - name: Package VSIX
         run: npx @vscode/vsce package --no-dependencies
