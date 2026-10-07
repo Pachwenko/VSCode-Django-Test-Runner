@@ -12,6 +12,7 @@ tsconfig.test.json
 eslint.config.mjs
 esbuild.mjs
 CONTRIBUTING.md
+PUBLISHING.md
 **/*.map
 **/*.ts
 !dist/**

@@ -80,7 +80,7 @@ This produces a `.vsix` file you can install locally via `Extensions > Install f
 
 1. Fork and create a feature branch
 2. Make your changes
-3. Ensure all checks pass: `npm run lint && npx tsc --noEmit && npm run test:unit && npm run package`
+3. Ensure lint, type checking, unit tests, integration tests, and packaging all pass locally
 4. Update CHANGELOG.md if the change is user-facing
 5. Submit a pull request
 

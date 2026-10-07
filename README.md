@@ -1,11 +1,13 @@
 # Django Test Runner
 
 [![CI](https://github.com/Pachwenko/VSCode-Django-Test-Runner/actions/workflows/ci.yml/badge.svg)](https://github.com/Pachwenko/VSCode-Django-Test-Runner/actions/workflows/ci.yml)
-[![VS Marketplace](https://img.shields.io/visual-studio-marketplace/v/Pachwenko.django-test-runner)](https://marketplace.visualstudio.com/items?itemName=Pachwenko.django-test-runner)
-[![Installs](https://img.shields.io/visual-studio-marketplace/i/Pachwenko.django-test-runner)](https://marketplace.visualstudio.com/items?itemName=Pachwenko.django-test-runner)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![VS Marketplace](https://vsmarketplacebadges.dev/version/Pachwenko.django-test-runner.svg)](https://marketplace.visualstudio.com/items?itemName=Pachwenko.django-test-runner)
+[![Installs](https://vsmarketplacebadges.dev/installs/Pachwenko.django-test-runner.svg)](https://marketplace.visualstudio.com/items?itemName=Pachwenko.django-test-runner)
+[![License: GPL-3.0](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](LICENSE)
 
-A VS Code extension that resolves the Python test path from your cursor position and runs it with a configurable command. Built for Django but works with **any Python test runner** — pytest, unittest, nose2, tox, and more.
+A VS Code extension that resolves the Django test path at your cursor and runs it through a configurable terminal command.
+
+It is especially useful when VS Code cannot discover the Python environment or tests itself—for example, when Django runs inside Docker, Docker Compose, a remote development environment, Poetry, or tox.
 
 Works in VS Code, Cursor, Windsurf, and VSCodium.
 
@@ -49,26 +51,35 @@ python manage.py test myapp.tests.test_models.MyTestCase.test_create
 
 ## Examples
 
-Since the command is fully configurable, you can adapt it to any setup:
+Since the command is fully configurable, you can adapt it to your environment:
 
 ```json
-// pytest
-{ "python.djangoTestRunner.manageProgram": "pytest", "python.djangoTestRunner.useVSCodePythonPath": false }
-
 // Docker Compose
-{ "python.djangoTestRunner.prefixCommand": "docker compose exec web", "python.djangoTestRunner.useVSCodePythonPath": false }
+{
+  "python.djangoTestRunner.prefixCommand": "docker compose exec web",
+  "python.djangoTestRunner.manageProgram": "python manage.py test",
+  "python.djangoTestRunner.useVSCodePythonPath": false
+}
+
+// Docker Compose with manage.py under src/
+{
+  "python.djangoTestRunner.prefixCommand": "docker compose exec web",
+  "python.djangoTestRunner.manageProgram": "python /app/src/manage.py test",
+  "python.djangoTestRunner.rootPackageName": "src",
+  "python.djangoTestRunner.useVSCodePythonPath": false
+}
 
 // Poetry
 { "python.djangoTestRunner.prefixCommand": "poetry run" }
 
-// tox
-{ "python.djangoTestRunner.manageProgram": "tox -- ", "python.djangoTestRunner.useVSCodePythonPath": false }
+// tox with a Django-compatible dotted test label
+{ "python.djangoTestRunner.manageProgram": "tox -- python manage.py test", "python.djangoTestRunner.useVSCodePythonPath": false }
 
 // manage.py in a subdirectory (e.g., src/)
 { "python.djangoTestRunner.prefixCommand": "cd src &&", "python.djangoTestRunner.stripRootFolder": true }
 ```
 
-Set `useVSCodePythonPath` to `false` whenever your test command already includes a Python interpreter or doesn't need one (pytest, tox, docker, etc.).
+Set `useVSCodePythonPath` to `false` whenever the command already selects its own Python interpreter, as Docker, Poetry, and tox normally do.
 
 ## Keybindings
 
@@ -88,7 +99,7 @@ No default keybindings are included to avoid conflicts with VS Code built-ins. A
 
 **Wrong test path?** Use `stripRootFolder` or `rootPackageName` to adjust the path prefix. This is common when `manage.py` lives in a subdirectory.
 
-**Python path not detected?** Ensure the [Python extension](https://marketplace.visualstudio.com/items?itemName=ms-python.python) is installed and an interpreter is selected, or set `useVSCodePythonPath` to `false`.
+**Python path not detected?** Ensure the [Python extension](https://marketplace.visualstudio.com/items?itemName=ms-python.python) is installed and an interpreter is selected. For Docker and remote environments, set `useVSCodePythonPath` to `false` and put the interpreter in `manageProgram` instead.
 
 ## Contributing
 
@@ -96,4 +107,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup and guidelines.
 
 ## License
 
-[MIT](LICENSE)
+[GPL-3.0](LICENSE)

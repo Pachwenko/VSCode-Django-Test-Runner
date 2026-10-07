@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import { parseLines, filePathToDottedPath, stripRootPackage, buildFullTestPath, buildClassTestPath, buildCommand } from '../../parsing.js';
+import { parseLines, filePathToDottedPath, stripRootPackage, getAppPathFromTestPath, buildFullTestPath, buildClassTestPath, buildCommand } from '../../parsing.js';
 
 // ---------------------------------------------------------------------------
 // parseLines
@@ -319,6 +319,36 @@ describe('stripRootPackage', () => {
             stripRootPackage('src.backend.app.tests.test_models', false, 'src.backend'),
             'app.tests.test_models'
         );
+    });
+});
+
+// ---------------------------------------------------------------------------
+// getAppPathFromTestPath
+// ---------------------------------------------------------------------------
+describe('getAppPathFromTestPath', () => {
+    it('should derive an app from the conventional tests package', () => {
+        assert.strictEqual(
+            getAppPathFromTestPath('myapp.tests.test_models'),
+            'myapp'
+        );
+    });
+
+    it('should preserve a nested app package', () => {
+        assert.strictEqual(
+            getAppPathFromTestPath('apps.users.tests.test_models'),
+            'apps.users'
+        );
+    });
+
+    it('should derive an app when tests are a single module', () => {
+        assert.strictEqual(
+            getAppPathFromTestPath('myapp.test_models'),
+            'myapp'
+        );
+    });
+
+    it('should return empty when no app package can be identified', () => {
+        assert.strictEqual(getAppPathFromTestPath('test_models'), '');
     });
 });
 
